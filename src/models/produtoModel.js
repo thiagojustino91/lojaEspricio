@@ -18,6 +18,25 @@ const produtoModel={
 
     },
 
+    buscarUm: async (idProduto) => {
+        try {
+            const pool = await getConnection();
+
+            const querySQL = 'SELECT * FROM produtos WHERE idProduto = @idProduto';
+
+            const result = await pool.request()
+             .input('idProduto', sql.UniqueIdentifier, idProduto)
+             .query(querySQL);
+
+             return result.recordset;
+        
+
+        } catch (error) {
+            console.error('Erro ao buscar o produto:', error);
+            throw error; // throw reverbera o erro
+        }
+    },
+
     inserirProduto: async (nomeProduto, precoProduto)=>{
         try {
             
@@ -35,7 +54,32 @@ const produtoModel={
             throw error;
             
         }
+    },
+
+    atualizarProduto: async (idProduto, nomeProduto, precoProduto) => {
+        try {
+            const pool = await getConnection();
+
+            // EVITAR SQL INJECTION
+            const querySQL = `
+                UPDATE Produtos
+                SET nomeProduto = @nomeProduto,
+                    precoProduto = @precoProduto
+                WHERE idProduto = @idProduto
+            `
+            await pool.request()
+                .input('nomeProduto', sql.VarChar(100), nomeProduto)
+                .input('precoProduto', sql.Decimal(10, 2), precoProduto)
+                .input('idProduto', sql.UniqueIdentifier, idProduto)
+                .query(querySQL);
+
+        } catch (error) {
+            console.error('Erro ao atualizar Produto:', error);
+            throw error;
+        }
     }
+
+    
 };
 
 
