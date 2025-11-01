@@ -11,6 +11,8 @@ router.post('/produtos', produtoController.criarProduto);
 // PUT / Atualizar Produtos
 router.put('/produtos/:idProduto', produtoController.atualizarProduto);
 
+// DELETE
+router.delete('/produtos/:idProduto', produtoController.deletarProduto);
 
 
 module.exports={produtoRoutes: router};

@@ -85,6 +85,36 @@ const produtoController ={
             
         }
 
+    },
+
+    deletarProduto: async (req, res) => {
+        try {
+             const { idProduto } = req.params;
+
+                // Validação de UUID
+            if (idProduto.length != 36) {
+                return res.status(400).json({ erro: 'id do produto invalido'});
+            } 
+
+            const produto = await produtoModel.buscarUm(idProduto);
+
+            if (!produto || produto.length !==1) {
+                return res.status(404).json({erro: 'Produto não encontrado'});
+            }
+
+            await produtoModel.deletarProduto(idProduto);
+
+            res.status(200).json({ message: "Produto deleteado com sucesso" });
+
+
+        } catch (error) {
+            console.error('Erro ao deletar Produto', error);
+            res.status(500).json({ error:'Erro interno no servidor ao deletar o Produto!'});
+            
+        }
+
+
+        
     }
     
 }
