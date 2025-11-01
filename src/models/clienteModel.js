@@ -1,6 +1,22 @@
 //Importar a conexão com o bancos de dados  e tipos de dasos SQL
 const {sql, getConnection}= require("../config/db");
 
+/**
+ * @namespace clienteModel
+ * @description Módulo de Acesso a Dados (Model) responsável por todas as operações de CRUD 
+ * na tabela 'Clientes'.
+ * * Nota: Assume o uso do pacote 'mssql' para conexão com o banco de dados.
+ */
+
+/**
+     * @function buscarTodos
+     * @description Busca e retorna todos os registros de clientes da tabela 'Clientes'.
+     * @async
+     * @returns {Promise<Array<Object>>} Uma Promise que resolve para um array de objetos de clientes (recordset).
+     * @throws {Error} Lança um erro se a conexão com o banco ou a consulta SQL falhar.
+     */
+
+
 const clienteModel={
     buscarTodos:async ()=>{
         try {
@@ -18,6 +34,7 @@ const clienteModel={
 
     },
 
+    
     buscarPorCPF: async (cpfCliente)=>{
 
         try {
@@ -33,22 +50,50 @@ const clienteModel={
 
 
         } catch (error) {
-            console.error("Erro ao buscar CPF:", error);
+            console.error("Erro ao buscar Cliente por CPF:", error);
             throw error;
         }
 
     },
 
-    inserirCliente: async (nomeCliente, cpfCliente)=>{
+
+    buscarPorEmail: async (emailCliente)=>{
+
+        try {
+            const pool = await getConnection();
+
+            let querySQL ="SELECT * FROM Clientes WHERE emailCliente = @emailCliente";
+
+            const result = await pool.request()
+                .input('emailCliente', sql.VarChar(200), emailCliente)
+                .query(querySQL);
+            
+            return result.recordset;
+
+
+        } catch (error) {
+            console.error("Erro ao buscar Cliente por Email:", error);
+            throw error;
+        }
+
+    },
+
+    
+
+
+    inserirCliente: async (nomeCliente, cpfCliente, emailCliente, senhaCliente)=>{
         try {
             
             const pool = await getConnection();
 
-            let querySQL = 'INSERT INTO Clientes (nomeCliente, cpfCliente) VALUES (@nomeCliente, @cpfCliente)';
+            let querySQL = 'INSERT INTO Clientes (nomeCliente, cpfCliente, emailCliente, senhaCliente) VALUES (@nomeCliente, @cpfCliente, @emailCliente, @senhaCliente)';
+
 
             await pool.request()
                 .input('nomeCliente', sql.VarChar(250), nomeCliente)
                 .input('cpfCliente', sql.VarChar(14), cpfCliente)
+                .input('emailCliente', sql.VarChar(200),emailCliente)
+                .input('senhaCliente', sql.VarChar(255), senhaCliente)
                 .query(querySQL);
 
         } catch (error) {
@@ -56,7 +101,9 @@ const clienteModel={
             throw error;
             
         }
-    }
+    },
+
+    
 };
 
 

@@ -37,15 +37,17 @@
 
 #### GET /clientes
 - **Descrição**: Obtém uma lista de Clientes
-- **Response**: Array de clientes
+- **Response**: Array de clientes onde lista todos os cliente cadastradas
 
 #### POST /clientes
 - **Descrição**: Cria um novo cliente
+- **senhaCriptografada**: Criar uma senha onde está senha e criptografada em bcrypt
 
 - **Body**:
 ```
 {
     "nomeCliente": "nomeExemplo",
     "cpfCliente": "000.000.000-00"
-    
+    "emailClinte": "email@"
+    "senhaClinte": "senha"
 }
