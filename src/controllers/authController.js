@@ -1,7 +1,6 @@
 const { clienteModel } = require("../models/clienteModel")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
-const { ReturnStatusToken } = require("tedious/lib/token/token");
 
 const authController = {
     clienteLogin: async (req, res) => {
@@ -34,6 +33,13 @@ const authController = {
 
             const token = jwt.sign(payload, process.env.JWT_SECRET,{
                 expiresIn: process.env.JWT_EXPIRES_IN
+            });
+
+            res.cookie("token", token,{
+                httpOnly: true,
+                secure: false,
+                sameSite: "strict",
+                maxAge: Number(process.env.JWT_TIME_EXPIRES_IN)
             });
 
             res.status(200).json({ 

@@ -91,7 +91,7 @@ const clienteModel={
 
             await pool.request()
                 .input('nomeCliente', sql.VarChar(250), nomeCliente)
-                .input('cpfCliente', sql.VarChar(14), cpfCliente)
+                .input('cpfCliente', sql.VarChar(15), cpfCliente)
                 .input('emailCliente', sql.VarChar(200),emailCliente)
                 .input('senhaCliente', sql.VarChar(255), senhaCliente)
                 .query(querySQL);
